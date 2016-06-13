@@ -1,7 +1,7 @@
 {
     "name": "webtales/alambic-redis-cache",
     "require": {
-        "nrk/predis":"v1.1"
+        "predis/predis": "1.1.*@dev"
     },
     "autoload": {
         "classmap": ["src"]
