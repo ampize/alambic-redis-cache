@@ -4,9 +4,27 @@ namespace RedisCache;
 
 class RedisCache
 {
+    /**
+     * Redis client.
+     *
+     * @var Client[]
+     */
     protected $_client;
+
+    /**
+     * Default cache Time To Live.
+     *
+     * @var int
+     */
     protected $_defaultCacheTTL = 3600;
 
+    /**
+     * Default call of RedisCache.
+     *
+     * @param array $payload
+     *
+     * @return array
+     */
     public function __invoke($payload = [])
     {
         // Init Redis client
@@ -18,7 +36,13 @@ class RedisCache
 
         return $payload['isMutation'] ? $this->execute($payload) : $this->resolve($payload);
     }
-
+    /**
+     * Resolver.
+     *
+     * @param array $payload
+     *
+     * @return array
+     */
     private function resolve($payload = [])
     {
         if (!isset($payload['response'])) {
@@ -55,6 +79,13 @@ class RedisCache
         return $payload;
     }
 
+    /**
+     * Handle mutations.
+     *
+     * @param array $payload
+     *
+     * @return array $payload
+     */
     private function execute($payload = [])
     {
         if (isset($payload['response'])) {
@@ -71,6 +102,13 @@ class RedisCache
         return $payload;
     }
 
+    /**
+     * Iterative construct of queries keys to delete from cache.
+     *
+     * @param array $queries
+     *
+     * @return array
+     */
     private function getKeysToDelete($queries)
     {
         $result = [];
