@@ -5,6 +5,20 @@ namespace RedisCache;
 class RedisCache
 {
     /**
+     * Redis default host
+     *
+     * @var string
+     */
+    protected $_defaultHost = "127.0.0.1";
+
+    /**
+     * Redis default port
+     *
+     * @var string
+     */
+    protected $_defaultPort = "6379";
+
+    /**
      * Redis client.
      *
      * @var Client[]
@@ -27,15 +41,34 @@ class RedisCache
      */
     public function __invoke($payload = [])
     {
+        // Get Redis configuration
+        $host = isset($payload["connectorBaseConfig"]["redisCacheHost"]) ? $payload["connectorBaseConfig"]["redisCacheHost"] : $this->_defaultHost;
+        $port = isset($payload["connectorBaseConfig"]["redisCachePort"]) ? $payload["connectorBaseConfig"]["redisCachePort"] : $this->_defaultPort;
+        $password = isset($payload["connectorBaseConfig"]["redisCachePassword"]) ? $payload["connectorBaseConfig"]["redisCachePassword"] : null;
+
         // Init Redis client
-        $this->_client = new \Predis\Client();
+        try {
+            $this->_client = new \Predis\Client([
+                'host' => $host,
+                'port' => $port
+            ]);
+        } catch (Exception $exception) {
+            throw new Exception($exception->getMessage());
+        }
+
+        if ($password) {
+            $this->_client->auth($password);
+        }
+
         // Set default cache TTL
         if (isset($payload['connectorBaseConfig']['defaultCacheTTL'])) {
             $this->_defaultCacheTTL = $payload['connectorBaseConfig']['defaultCacheTTL'];
         }
 
+        // Route to resolve or execute
         return $payload['isMutation'] ? $this->execute($payload) : $this->resolve($payload);
     }
+
     /**
      * Resolver.
      *
