@@ -1,5 +1,5 @@
 {
-    "name": "webtales/alambic-redis-cache",
+    "name": "ampize/alambic-redis-cache",
     "require": {
         "predis/predis": "1.1.*@dev"
     },
