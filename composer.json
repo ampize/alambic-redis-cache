@@ -1,5 +1,13 @@
 {
     "name": "ampize/alambic-redis-cache",
+    "description": "Alambic Redis cache middleware",
+    "keywords": ["alambic","middleware", "redis","cache"],
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+      {
+        "name": "Ampize"
+      }
     "require": {
         "predis/predis": "1.1.*@dev"
     },
